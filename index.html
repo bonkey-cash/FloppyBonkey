@@ -396,6 +396,13 @@ font-style: normal;
 			lift: currentLift,
 			velocity: 0
 		};
+		
+		const topPipeImage = new Image();
+		topPipeImage.src = 'pixel art top pipe.png';
+
+		const bottomPipeImage = new Image();
+		bottomPipeImage.src = 'pixel art bottom pipe.png';
+
 
         const bars = [];
         const barWidth = 50;
@@ -425,7 +432,7 @@ font-style: normal;
 
     let lastRotationAngle = 0; // Add a variable to store the last rotation angle
 
-function drawTurtle() {
+	function drawTurtle() {
     // Calculate the rotation angle based on velocity
     let targetRotationAngle = Math.min(Math.max(turtle.velocity / 5, -2), 2) * 45;
 
@@ -446,9 +453,9 @@ function drawTurtle() {
         }
         const coinSound = new Audio(''); // Replace with the correct path to your MP3 file
         const backgroundMusic = new Audio(''); // Replace with the correct path to your MP3 file
-backgroundMusic.loop = true; // Loop s://flapthe background music
-const gameOverSound = new Audio('');
-const scoreSound = new Audio(''); // Replace with the correct path to your MP3 file
+		backgroundMusic.loop = true; // Loop s://flapthe background music
+		const gameOverSound = new Audio('');
+		const scoreSound = new Audio(''); // Replace with the correct path to your MP3 file
 
         function clearCanvas() {
     // Clear the entire canvas
@@ -468,48 +475,34 @@ const scoreSound = new Audio(''); // Replace with the correct path to your MP3 f
 
 function createBars() {
     const minBarHeight = 50;
-    const initialGap = 300; // Initial gap is moderate
-    const scoreMultiplier = 0.05; // Moderate rate of gap decrease
-    barGap = initialGap - score * scoreMultiplier;
-
-    // Ensure the bar gap is within a reasonable range
-    const gapAdjustment = Math.max(250 - score * 3, 150); // Moderate adjustment values
-    const actualBarGap = Math.max(barGap - gapAdjustment, 150); // Ensuring a moderate minimum gap
-
-    const isMobile = window.innerWidth <= 600;
-    const horizontalGapAdjustment = isMobile ? 170 : 0; // Moderate adjustment for mobile
-    const finalBarGap = actualBarGap - horizontalGapAdjustment;
-
-    const minGapSize = 150; // Moderate minimum gap size
-    const gapSize = Math.max(minGapSize, finalBarGap);
-
-    // Calculate the gap position
     const maxBarHeight = canvas.height - barGap - minBarHeight;
-    const gapOpeningPosition = Math.random() * (maxBarHeight - minBarHeight) + minBarHeight;
-    const gapPosition = Math.random() * (canvas.height - gapSize);
 
-    // Create the bars
+    // Calculate random gap position
+    const gapOpeningPosition = Math.random() * (maxBarHeight - minBarHeight) + minBarHeight;
+
+    // Top pipe (bar)
     bars.push({
         x: canvas.width,
         y: 0,
         width: barWidth,
-        height: gapPosition,
+        height: gapOpeningPosition,
+        type: 'top', // Indicate this is a top pipe
         scored: false
     });
+
+    // Bottom pipe (bar)
     bars.push({
         x: canvas.width,
-        y: gapPosition + gapSize,
+        y: gapOpeningPosition + barGap,
         width: barWidth,
-        height: canvas.height - gapPosition - gapSize,
-        scored: false
+        height: canvas.height - (gapOpeningPosition + barGap),
+        type: 'bottom' // Indicate this is a bottom pipe
     });
 
-
-
-
+    // Optionally add a coin between the gap
     if (Math.random() < 0.3) {
-        const coinY = gapPosition + (gapSize - coinHeight) / 2;
-        const coinX = canvas.width + (barWidth / 2) - (coinWidth / 2); // Center the coin horizontally
+        const coinY = gapOpeningPosition + barGap / 2 - coinHeight / 2;
+        const coinX = canvas.width + barWidth / 2 - coinWidth / 2;
         coins.push({
             x: coinX,
             y: coinY,
@@ -520,22 +513,29 @@ function createBars() {
     }
 }
 
+
         function drawBars() {
-            bars.forEach(bar => {
-                ctx.fillStyle = 'green';
-                ctx.fillRect(bar.x, bar.y, bar.width, bar.height);
-            });
+    bars.forEach(bar => {
+        if (bar.type === 'top') {
+            // Draw the top pipe
+            ctx.drawImage(topPipeImage, bar.x, bar.y, bar.width, bar.height);
+        } else if (bar.type === 'bottom') {
+            // Draw the bottom pipe
+            ctx.drawImage(bottomPipeImage, bar.x, bar.y, bar.width, bar.height);
         }
-                       document.getElementById('clearCacheButton').addEventListener('click', function() {
-    // Display confirmation dialog
-    if (confirm("Are you sure you want to clear the cache?")) {
-        // Clear the cache if user confirms
-        localStorage.clear();
-        alert('All progress has been reset!');
-        // Optionally, refresh the page to apply changes
-        location.reload();
-    }
-});
+    });
+}
+
+		document.getElementById('clearCacheButton').addEventListener('click', function() {
+			// Display confirmation dialog
+			if (confirm("Are you sure you want to clear the cache?")) {
+				// Clear the cache if user confirms
+				localStorage.clear();
+				alert('All progress has been reset!');
+				// Optionally, refresh the page to apply changes
+				location.reload();
+			}
+		});
 
 
         function drawCoins() {
