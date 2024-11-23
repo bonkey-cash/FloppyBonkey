@@ -405,7 +405,7 @@ font-style: normal;
 
 
         const bars = [];
-        const barWidth = 50;
+        const barWidth = 80;
         let barGap = 400; 
         let barSpeed = 2;
         let score = 0;
@@ -457,74 +457,64 @@ font-style: normal;
 		const gameOverSound = new Audio('');
 		const scoreSound = new Audio(''); // Replace with the correct path to your MP3 file
 
-        function clearCanvas() {
-    // Clear the entire canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+		function clearCanvas() {
+			ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear entire canvas
 
-    // Draw the background image
-    backgroundX -= barSpeed * 0.5;
-	if (backgroundX <= -canvas.width) {
-        backgroundX = 0;
-    }
-		ctx.drawImage(backgroundImage, backgroundX, 0, canvas.width, canvas.height);
-		ctx.drawImage(backgroundImage, backgroundX + canvas.width, 0, canvas.width, canvas.height);
-	}
+			// Redraw the background
+			backgroundX -= barSpeed * 0.5;
+			if (backgroundX <= -canvas.width) {
+				backgroundX = 0;
+			}
+			ctx.drawImage(backgroundImage, backgroundX, 0, canvas.width, canvas.height);
+			ctx.drawImage(backgroundImage, backgroundX + canvas.width, 0, canvas.width, canvas.height);
+		}
+
 
         
         
 
-function createBars() {
-    const minBarHeight = 50;
-    const maxBarHeight = canvas.height - barGap - minBarHeight;
+		function createBars() {
+			const pipeWidth = topPipeImage.width; // Use the actual pipe image width
+			const minBarHeight = 50; // Minimum height for a pipe
+			const maxBarHeight = canvas.height - barGap - minBarHeight;
 
-    // Calculate random gap position
-    const gapOpeningPosition = Math.random() * (maxBarHeight - minBarHeight) + minBarHeight;
+			// Calculate the gap opening position
+			const gapOpeningPosition = Math.random() * (maxBarHeight - minBarHeight) + minBarHeight;
 
-    // Top pipe (bar)
-    bars.push({
-        x: canvas.width,
-        y: 0,
-        width: barWidth,
-        height: gapOpeningPosition,
-        type: 'top', // Indicate this is a top pipe
-        scored: false
-    });
+			// Top pipe
+			bars.push({
+				x: canvas.width, // Start at the right edge of the canvas
+				y: 0,
+				width: pipeWidth,
+				height: gapOpeningPosition,
+				type: 'top', // Specify this as a top pipe
+				scored: false
+			});
 
-    // Bottom pipe (bar)
-    bars.push({
-        x: canvas.width,
-        y: gapOpeningPosition + barGap,
-        width: barWidth,
-        height: canvas.height - (gapOpeningPosition + barGap),
-        type: 'bottom' // Indicate this is a bottom pipe
-    });
-
-    // Optionally add a coin between the gap
-    if (Math.random() < 0.3) {
-        const coinY = gapOpeningPosition + barGap / 2 - coinHeight / 2;
-        const coinX = canvas.width + barWidth / 2 - coinWidth / 2;
-        coins.push({
-            x: coinX,
-            y: coinY,
-            width: coinWidth,
-            height: coinHeight,
-            collected: false
-        });
-    }
-}
+			// Bottom pipe
+			bars.push({
+				x: canvas.width,
+				y: gapOpeningPosition + barGap,
+				width: pipeWidth,
+				height: canvas.height - (gapOpeningPosition + barGap),
+				type: 'bottom' // Specify this as a bottom pipe
+			});
+		}
 
 
-        function drawBars() {
-    bars.forEach(bar => {
-        if (bar.type === 'top') {
-            // Draw the top pipe
-            ctx.drawImage(topPipeImage, bar.x, bar.y, bar.width, bar.height);
-        } else if (bar.type === 'bottom') {
-            // Draw the bottom pipe
-            ctx.drawImage(bottomPipeImage, bar.x, bar.y, bar.width, bar.height);
-        }
-    });
-}
+
+		function drawBars() {
+			bars.forEach(bar => {
+				if (bar.type === 'top') {
+					// Draw the top pipe
+					ctx.drawImage(topPipeImage, bar.x, bar.y, bar.width, bar.height);
+				} else if (bar.type === 'bottom') {
+					// Draw the bottom pipe
+					ctx.drawImage(bottomPipeImage, bar.x, bar.y, bar.width, bar.height);
+				}
+			});
+		}
+
 
 		document.getElementById('clearCacheButton').addEventListener('click', function() {
 			// Display confirmation dialog
