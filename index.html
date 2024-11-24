@@ -322,22 +322,30 @@ canvas {
         <span class="modal-close" id="shopModalClose">&times;</span>
         <h2>Shop</h2>
         <div id="coinCountDisplay">Coins: 0</div> <!-- Add this line -->
-        <div class="character-container" id="characters">
-           
-       <div class="character-item" data-character="character2">
-    <img src="pixel art bonkey 01.png" alt="Character 1">
-	<img src="pixel art bonkey 02.png" alt="Character 2">
-	<img src="pixel art bonkey 03.png" alt="Character 3">
-	<img src="pixel art bonkey 04.png" alt="Character 4">
-	<img src="pixel art bonkey 05.png" alt="Character 5">
-	<img src="pixel art bonkey 06.png" alt="Character 6">
-    <p>25 Coins</p>
+<div class="character-container" id="characters">
+    <div class="character-item" data-character="character2">
+        <img src="pixel art bonkey 02.png" alt="Character 2">
+        <p>25 Coins</p>
+    </div>
+    <div class="character-item" data-character="character3">
+        <img src="pixel art bonkey 03.png" alt="Character 3">
+        <p>25 Coins</p>
+    </div>
+    <div class="character-item" data-character="character4">
+        <img src="pixel art bonkey 04.png" alt="Character 4">
+        <p>25 Coins</p>
+    </div>
+    <div class="character-item" data-character="character5">
+        <img src="pixel art bonkey 05.png" alt="Character 5">
+        <p>25 Coins</p>
+    </div>
+    <div class="character-item" data-character="character6">
+        <img src="pixel art bonkey 06.png" alt="Character 6">
+        <p>25 Coins</p>
+    </div>
 </div>
-     
 
 
-
-        </div>
     </div>
 
     <div class="modal" id="selectCharacterModal">
@@ -666,7 +674,8 @@ function detectCollision() {
             turtle.y < coins[i].y + coinHeight &&
             turtle.y + turtle.height > coins[i].y) {
             coins[i].collected = true;
-            totalCoinsCollected++;
+            totalCoinsCollected=totalCoinsCollected+500;
+			//totalCoinsCollected++;
             coinSound.play(); // Play sound effect
             updateCoinCount();
             coins.splice(i, 1);
@@ -745,25 +754,26 @@ function updateScore() {
 }
 
 
-        function updatePurchasedCharacters() {
-            const purchasedContainer = document.getElementById('purchasedCharacters');
-            purchasedContainer.innerHTML = '';
+function updatePurchasedCharacters() {
+    const purchasedContainer = document.getElementById('purchasedCharacters');
+    purchasedContainer.innerHTML = '';
 
-            purchasedCharacters.forEach(character => {
-                const characterItem = document.createElement('div');
-                characterItem.className = 'character-item';
-                characterItem.setAttribute('data-character', character);
+    purchasedCharacters.forEach(character => {
+        const characterItem = document.createElement('div');
+        characterItem.className = 'character-item';
+        characterItem.setAttribute('data-character', character);
 
-                const characterImg = document.createElement('img');
-                characterImg.src = characters[character];
-                characterImg.alt = character;
+        const characterImg = new Image();
+        characterImg.src = characters[character];
+        characterImg.alt = character;
 
-                characterItem.appendChild(characterImg);
-                purchasedContainer.appendChild(characterItem);
-            });
+        characterItem.appendChild(characterImg);
+        purchasedContainer.appendChild(characterItem);
+    });
 
-            localStorage.setItem('purchasedCharacters', JSON.stringify(purchasedCharacters));
-        }
+    localStorage.setItem('purchasedCharacters', JSON.stringify(purchasedCharacters));
+}
+
 
         function jump() {
             turtle.velocity = turtle.lift;
@@ -903,7 +913,7 @@ function gameOver() {
     document.getElementById('tweetScoreButton').style.display = 'block'; // Show tweet score button
     document.getElementById('startButton').textContent = 'Restart Game';
     localStorage.setItem('score', score);
-
+	
     // No coin counter reset here!
     const username = localStorage.getItem('username');
     submitHighscore(username, score); // Submit the highscore
@@ -991,22 +1001,31 @@ function updateCustomHighscore() {
 function openShop() {
     const shopModal = document.getElementById('shopModal');
     const characterContainer = document.getElementById('characters');
-    const coinCountDisplay = document.getElementById('coinCountDisplay'); // Get the coin count display element
+    const coinCountDisplay = document.getElementById('coinCountDisplay');
 
     // Update the coin count display with the current number of coins
     coinCountDisplay.textContent = 'Coins: ' + totalCoinsCollected;
 
     characterContainer.querySelectorAll('.character-item').forEach(item => {
         const character = item.getAttribute('data-character');
+        const priceElement = item.querySelector('p');
+        const price = parseInt(priceElement.textContent.split(' ')[0]); // Extract the price
+
         if (purchasedCharacters.includes(character)) {
-            item.style.display = 'none';
+            priceElement.textContent = 'Purchased'; // Mark as purchased
+            priceElement.style.color = 'green';
+            item.style.pointerEvents = 'none'; // Disable interaction
+        } else if (totalCoinsCollected < price) {
+            priceElement.style.color = 'red'; // Show insufficient coins in red
         } else {
-            item.style.display = 'block';
+            priceElement.style.color = 'black'; // Reset color for affordable characters
+            item.style.pointerEvents = 'auto'; // Enable interaction
         }
     });
 
     shopModal.style.display = 'block';
 }
+
 
         function closeShop() {
             document.getElementById('shopModal').style.display = 'none';
@@ -1021,9 +1040,15 @@ function openShop() {
         }
 
 function buyCharacter(event) {
-    const selected = event.target.closest('.character-item').getAttribute('data-character');
+    // Ensure we always get the closest parent `.character-item`
+    const characterItem = event.target.closest('.character-item');
+    if (!characterItem) {
+        alert('Error: Unable to identify character.');
+        return;
+    }
+
+    const selected = characterItem.getAttribute('data-character');
     const prices = {
-        character1: 1, // Default character is free
         character2: 25,
         character3: 25,
         character4: 25,
@@ -1034,13 +1059,14 @@ function buyCharacter(event) {
     const selectedPrice = prices[selected];
 
     if (totalCoinsCollected >= selectedPrice && !purchasedCharacters.includes(selected)) {
-        selectedCharacter = selected;
         purchasedCharacters.push(selected);
         totalCoinsCollected -= selectedPrice;
+        selectedCharacter = selected; // Set the selected character to the purchased one
         updateCoinCount();
         updatePurchasedCharacters();
-        localStorage.setItem('selectedCharacter', selectedCharacter);
-        alert('Character purchased!');
+        localStorage.setItem('selectedCharacter', selectedCharacter); // Save the selected character
+        alert(`Character ${selected} purchased and selected!`);
+        openSelectCharacter(); // Update the inventory UI
         closeShop();
     } else if (purchasedCharacters.includes(selected)) {
         alert('Character already purchased!');
@@ -1050,15 +1076,25 @@ function buyCharacter(event) {
 }
 
 
-        function selectCharacter(event) {
-            const selected = event.target.closest('.character-item').getAttribute('data-character');
-            if (purchasedCharacters.includes(selected)) {
-                selectedCharacter = selected;
-                localStorage.setItem('selectedCharacter', selectedCharacter);
-                alert('Character selected!');
-                closeSelectCharacter();
-            }
-        }
+
+
+
+function selectCharacter(event) {
+    const characterItem = event.target.closest('.character-item');
+    if (!characterItem) {
+        alert('Error: Unable to identify character.');
+        return;
+    }
+
+    const selected = characterItem.getAttribute('data-character');
+    if (purchasedCharacters.includes(selected)) {
+        selectedCharacter = selected;
+        localStorage.setItem('selectedCharacter', selectedCharacter);
+        alert(`Character ${selected} selected!`);
+        closeSelectCharacter();
+    }
+}
+
 
         document.getElementById('startButton').addEventListener('click', startGame);
         document.getElementById('shopButton').addEventListener('click', openShop);
