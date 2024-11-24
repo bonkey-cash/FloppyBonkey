@@ -35,7 +35,7 @@ font-style: normal;
         margin: 0 auto;
         border: 3px solid black;
         width: 98%;
-        height: 75vh;
+        height: 90vh;
         background-image: url('Ponke Chart Background.png'); /* Update the URL with your actual background image */
         background-size: cover;
         background-position: center;
@@ -73,7 +73,7 @@ font-style: normal;
     #scoreText, #coinText {
         position: absolute;
         top: 20px;
-        left: 50%;
+        left: 10%;
         transform: translateX(-50%);
         font-size: 24px;
         color: white;
@@ -374,13 +374,14 @@ font-style: normal;
         let selectedCharacter = localStorage.getItem('selectedCharacter') || 'character1';
         
 		// Define initial and maximum gravity
-		const initialGravity = 0.03; // Starting gravity (low)
-		const maxGravity = 0.09;     // Maximum gravity (normal gameplay value)
+		const gamespeedmultiplier = 5; // to quickly adjust the speed of the game
+		const initialGravity = 0.03*gamespeedmultiplier; // Starting gravity (low)
+		const maxGravity = 0.09*gamespeedmultiplier;     // Maximum gravity (normal gameplay value)
 		const gravityIncreaseDuration = 3000; // Time (in ms) to reach max gravity
 
 		// Define initial and adjusted lift
-		const initialLift = -2; // Stronger jump at low gravity
-		const maxLift = -3;     // Normal jump at max gravity
+		const initialLift = -2*gamespeedmultiplier; // Stronger jump at low gravity
+		const maxLift = -3*gamespeedmultiplier;     // Normal jump at max gravity
 
 		let currentGravity = initialGravity;
 		let currentLift = initialLift;
@@ -407,7 +408,7 @@ font-style: normal;
         const bars = [];
         const barWidth = 80;
         let barGap = 200; 
-        let barSpeed = 2;
+        let barSpeed = 2*gamespeedmultiplier;
         let score = 0;
         let gameRunning = false;
         let barCreationInterval;
@@ -812,7 +813,7 @@ function startGame() {
     // Update score and start the game loop
     updateScore();
     update();
-    barCreationInterval = setInterval(createBars, 2000);
+    barCreationInterval = setInterval(createBars, 2000)/gamespeedmultiplier;
     barSpeedIncreaseInterval = setInterval(increaseBarSpeed, 5000);
     speedUpdateInterval = setInterval(updateSpeed, 5000);
 }
@@ -821,7 +822,7 @@ function startGame() {
 
 
 function increaseBarSpeed() {
-    barSpeed += 0.2; // Pas de snelheidstoename aan zoals gewenst
+    barSpeed += 0.2*gamespeedmultiplier; // Pas de snelheidstoename aan zoals gewenst
 }
 
 document.querySelectorAll('button').forEach(button => {
