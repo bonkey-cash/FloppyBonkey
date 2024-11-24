@@ -373,15 +373,15 @@ font-style: normal;
 
         let selectedCharacter = localStorage.getItem('selectedCharacter') || 'character1';
         // Game speed scaler
-		const gamespeedmodifier = 5;
+		const gamespeedmodifier = 2.5;
 		// Define initial and maximum gravity
-		const initialGravity = 0.03; // Starting gravity (low)
-		const maxGravity = 0.09;     // Maximum gravity (normal gameplay value)
+		const initialGravity = 0.03*gamespeedmodifier; // Starting gravity (low)
+		const maxGravity = 0.09*gamespeedmodifier;     // Maximum gravity (normal gameplay value)
 		const gravityIncreaseDuration = 3000; // Time (in ms) to reach max gravity
 
 		// Define initial and adjusted lift
-		const initialLift = -2; // Stronger jump at low gravity
-		const maxLift = -3;     // Normal jump at max gravity
+		const initialLift = -2*(gamespeedmodifier*.6); // Stronger jump at low gravity
+		const maxLift = -3*(gamespeedmodifier*.6);     // Normal jump at max gravity
 
 		let currentGravity = initialGravity;
 		let currentLift = initialLift;
@@ -818,8 +818,8 @@ function startGame() {
     updateScore();
     update();
     barCreationInterval = setInterval(createBars, 2000/gamespeedmodifier);
-    barSpeedIncreaseInterval = setInterval(increaseBarSpeed, 5000);
-    speedUpdateInterval = setInterval(updateSpeed, 5000);
+    barSpeedIncreaseInterval = setInterval(increaseBarSpeed, 5000/gamespeedmodifier);
+    speedUpdateInterval = setInterval(updateSpeed, 5000/gamespeedmodifier);
 }
 
 
