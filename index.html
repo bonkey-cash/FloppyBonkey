@@ -329,19 +329,23 @@ canvas {
     </div>
     <div class="character-item" data-character="character3">
         <img src="pixel art bonkey 03.png" alt="Character 3">
-        <p>25 Coins</p>
+        <p>50 Coins</p>
     </div>
     <div class="character-item" data-character="character4">
         <img src="pixel art bonkey 04.png" alt="Character 4">
-        <p>25 Coins</p>
+        <p>75 Coins</p>
     </div>
     <div class="character-item" data-character="character5">
         <img src="pixel art bonkey 05.png" alt="Character 5">
-        <p>25 Coins</p>
+        <p>100 Coins</p>
     </div>
     <div class="character-item" data-character="character6">
         <img src="pixel art bonkey 06.png" alt="Character 6">
-        <p>25 Coins</p>
+        <p>150 Coins</p>
+    </div>
+	<div class="character-item" data-character="character7">
+        <img src="pixel art bonkey 07.png" alt="Character 7">
+        <p>200 Coins</p>
     </div>
 </div>
 
@@ -388,6 +392,7 @@ canvas {
 			character4: 'pixel art bonkey 04.png',
 			character5: 'pixel art bonkey 05.png',
 			character6: 'pixel art bonkey 06.png',
+			character7: 'pixel art bonkey 07.png',
             
         };
 
@@ -540,7 +545,7 @@ canvas {
 			});
 
 			// Add a coin between the pipes with a 30% chance
-			if (Math.random() < 1) {
+			if (Math.random() < 0.3) {
 				const coinY = gapOpeningPosition + (barGap - coinHeight) / 2; // Center the coin in the gap
 				const coinX = canvas.width + (pipeWidth / 2) - (coinWidth / 2); // Center the coin horizontally
 				coins.push({
@@ -674,8 +679,8 @@ function detectCollision() {
             turtle.y < coins[i].y + coinHeight &&
             turtle.y + turtle.height > coins[i].y) {
             coins[i].collected = true;
-            totalCoinsCollected=totalCoinsCollected+500;
-			//totalCoinsCollected++;
+            //totalCoinsCollected=totalCoinsCollected+500;
+			totalCoinsCollected++;
             coinSound.play(); // Play sound effect
             updateCoinCount();
             coins.splice(i, 1);
@@ -1050,10 +1055,11 @@ function buyCharacter(event) {
     const selected = characterItem.getAttribute('data-character');
     const prices = {
         character2: 25,
-        character3: 25,
-        character4: 25,
-        character5: 25,
-        character6: 25,
+        character3: 50,
+        character4: 75,
+        character5: 100,
+        character6: 150,
+		character7: 200,
     };
 
     const selectedPrice = prices[selected];
