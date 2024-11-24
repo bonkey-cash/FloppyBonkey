@@ -1144,7 +1144,7 @@ canvas.addEventListener('click', (event) => {
 
 document.getElementById('saveUsernameButton').addEventListener('click', () => {
     const username = document.getElementById('usernameInput').value.trim();
-    const validUsernameRegex = /^[a-zA-Z0-9\s]+$/; // Allows letters, numbers, and spaces
+    const validUsernameRegex = /^[a-zA-Z0-9\s_]+$/; // Allows letters, numbers, spaces, and underscores
 
     if (username.length < 3) {
         document.getElementById('usernameValidationMessage').textContent = 'Username must be at least 3 characters long.';
@@ -1153,7 +1153,7 @@ document.getElementById('saveUsernameButton').addEventListener('click', () => {
     } else if (!username) {
         document.getElementById('usernameValidationMessage').textContent = 'Please enter a valid username.';
     } else if (!validUsernameRegex.test(username)) {
-        document.getElementById('usernameValidationMessage').textContent = 'Usernames can only contain letters, numbers, and spaces.';
+        document.getElementById('usernameValidationMessage').textContent = 'Usernames can only contain letters, numbers, spaces, and underscores.';
     } else {
         // Sanitize the username for further use
         const sanitizedUsername = username.replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -1161,6 +1161,7 @@ document.getElementById('saveUsernameButton').addEventListener('click', () => {
         document.getElementById('usernameModal').style.display = 'none';
     }
 });
+
 
 
 function updateHighscore() {
