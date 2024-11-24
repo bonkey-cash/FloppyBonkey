@@ -381,7 +381,7 @@ font-style: normal;
 
 		// Define initial and adjusted lift
 		const initialLift = -1.5*(gamespeedmodifier*1); // Stronger jump at low gravity
-		const maxLift = -3.25*(gamespeedmodifier*1);     // Normal jump at max gravity
+		const maxLift = -3.05*(gamespeedmodifier*1);     // Normal jump at max gravity
 
 		let currentGravity = initialGravity;
 		let currentLift = initialLift;
@@ -817,9 +817,9 @@ function startGame() {
     // Update score and start the game loop
     updateScore();
     update();
-    barCreationInterval = setInterval(createBars, 2000/gamespeedmodifier);
-    barSpeedIncreaseInterval = setInterval(increaseBarSpeed, 5000/gamespeedmodifier);
-    speedUpdateInterval = setInterval(updateSpeed, 5000/gamespeedmodifier);
+    barCreationInterval = setInterval(createBars, 4000/gamespeedmodifier);
+    barSpeedIncreaseInterval = setInterval(increaseBarSpeed, 5000);
+    speedUpdateInterval = setInterval(updateSpeed, 5000);
 }
 
 
