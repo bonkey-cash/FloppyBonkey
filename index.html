@@ -35,7 +35,7 @@ font-style: normal;
         margin: 0 auto;
         border: 3px solid black;
         width: 98%;
-        height: 50vh;
+        height: 75vh;
         background-image: url('Ponke Chart Background.png'); /* Update the URL with your actual background image */
         background-size: cover;
         background-position: center;
@@ -406,7 +406,7 @@ font-style: normal;
 
         const bars = [];
         const barWidth = 80;
-        let barGap = 400; 
+        let barGap = 200; 
         let barSpeed = 2;
         let score = 0;
         let gameRunning = false;
@@ -422,9 +422,9 @@ font-style: normal;
         let backgroundX = 0;
 
         function resizeCanvas() {
-            canvas.width = canvas.clientWidth;
-            canvas.height = canvas.clientHeight;
-            barGap = 400;
+			canvas.width = canvas.clientWidth; // Keep width dynamic
+			canvas.height = canvas.clientHeight; // Update height dynamically
+            barGap = 200;
         }
 
         window.addEventListener('resize', resizeCanvas);
@@ -475,10 +475,16 @@ font-style: normal;
 
 		function createBars() {
 			const pipeWidth = topPipeImage.width; // Use the actual pipe image width
-			const minBarHeight = 50; // Minimum height for a pipe
-			const maxBarHeight = canvas.height - barGap - minBarHeight;
+			const minBarHeight = 60; // Minimum height for a pipe
+			const initialGap = 200; // Initial gap between pipes
+			const scoreMultiplier = 0.05; // Rate of gap decrease per score
+			const minGapSize = 100; // Minimum gap size to ensure the game is not impossible
 
-			// Calculate the gap opening position
+			// Calculate the progressive gap size based on the score
+			barGap = Math.max(initialGap - score * scoreMultiplier, minGapSize);
+
+			// Ensure the gap opening position stays within bounds
+			const maxBarHeight = canvas.height - barGap - minBarHeight;
 			const gapOpeningPosition = Math.random() * (maxBarHeight - minBarHeight) + minBarHeight;
 
 			// Top pipe
@@ -499,6 +505,19 @@ font-style: normal;
 				height: canvas.height - (gapOpeningPosition + barGap),
 				type: 'bottom' // Specify this as a bottom pipe
 			});
+
+			// Add a coin between the pipes with a 30% chance
+			if (Math.random() < 0.3) {
+				const coinY = gapOpeningPosition + (barGap - coinHeight) / 2; // Center the coin in the gap
+				const coinX = canvas.width + (pipeWidth / 2) - (coinWidth / 2); // Center the coin horizontally
+				coins.push({
+					x: coinX,
+					y: coinY,
+					width: coinWidth,
+					height: coinHeight,
+					collected: false
+				});
+			}
 		}
 
 
