@@ -372,16 +372,16 @@ font-style: normal;
         };
 
         let selectedCharacter = localStorage.getItem('selectedCharacter') || 'character1';
-        
+        // Game speed scaler
+		const gamespeedmodifier = 5;
 		// Define initial and maximum gravity
-		const gamespeedmultiplier = 5; // to quickly adjust the speed of the game
-		const initialGravity = 0.03*gamespeedmultiplier; // Starting gravity (low)
-		const maxGravity = 0.09*gamespeedmultiplier;     // Maximum gravity (normal gameplay value)
+		const initialGravity = 0.03; // Starting gravity (low)
+		const maxGravity = 0.09;     // Maximum gravity (normal gameplay value)
 		const gravityIncreaseDuration = 3000; // Time (in ms) to reach max gravity
 
 		// Define initial and adjusted lift
-		const initialLift = -2*gamespeedmultiplier; // Stronger jump at low gravity
-		const maxLift = -3*gamespeedmultiplier;     // Normal jump at max gravity
+		const initialLift = -2; // Stronger jump at low gravity
+		const maxLift = -3;     // Normal jump at max gravity
 
 		let currentGravity = initialGravity;
 		let currentLift = initialLift;
@@ -408,7 +408,7 @@ font-style: normal;
         const bars = [];
         const barWidth = 80;
         let barGap = 200; 
-        let barSpeed = 2*gamespeedmultiplier;
+        let barSpeed = 2*gamespeedmodifier;
         let score = 0;
         let gameRunning = false;
         let barCreationInterval;
@@ -478,7 +478,7 @@ font-style: normal;
 			const pipeWidth = topPipeImage.width; // Use the actual pipe image width
 			const minBarHeight = 60; // Minimum height for a pipe
 			const initialGap = 200; // Initial gap between pipes
-			const scoreMultiplier = 0.05; // Rate of gap decrease per score
+			const scoreMultiplier = 0.05/gamespeedmodifier; // Rate of gap decrease per score
 			const minGapSize = 100; // Minimum gap size to ensure the game is not impossible
 
 			// Calculate the progressive gap size based on the score
@@ -571,25 +571,29 @@ font-style: normal;
 
         preloadCharacterImages();
 
-        function updateBars() {
-            bars.forEach(bar => {
-                bar.x -= barSpeed;
-            });
+		function updateBars() {
+			bars.forEach(bar => {
+				bar.x -= barSpeed; // This already scales with barSpeed
+			});
 
-            if (bars.length && bars[0].x + barWidth < 0) {
-                bars.splice(0, 2);
-            }
-        }
+			// Remove bars that move off-screen
+			if (bars.length && bars[0].x + barWidth < 0) {
+				bars.splice(0, 2);
+			}
+		}
 
-        function updateCoins() {
-            coins.forEach(coin => {
-                coin.x -= barSpeed;
-            });
 
-            if (coins.length && coins[0].x + coinWidth < 0) {
-                coins.shift();
-            }
-        }
+		function updateCoins() {
+			coins.forEach(coin => {
+				coin.x -= barSpeed; // This also scales with barSpeed
+			});
+
+			// Remove coins that move off-screen
+			if (coins.length && coins[0].x + coinWidth < 0) {
+				coins.shift();
+			}
+		}
+
         document.addEventListener('keydown', function(event) {
     if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(event.key)) {
         event.preventDefault();
@@ -785,7 +789,7 @@ function startGame() {
     turtle.velocity = 0;
     bars.length = 0;
     coins.length = 0;
-    barSpeed = 2;
+    barSpeed = 2*gamespeedmodifier;
 
     // Reset gravity-related parameters
     currentGravity = initialGravity; // Reset to initial gravity
@@ -813,7 +817,7 @@ function startGame() {
     // Update score and start the game loop
     updateScore();
     update();
-    barCreationInterval = setInterval(createBars, 2000)/gamespeedmultiplier;
+    barCreationInterval = setInterval(createBars, 2000/gamespeedmodifier);
     barSpeedIncreaseInterval = setInterval(increaseBarSpeed, 5000);
     speedUpdateInterval = setInterval(updateSpeed, 5000);
 }
@@ -822,7 +826,7 @@ function startGame() {
 
 
 function increaseBarSpeed() {
-    barSpeed += 0.2*gamespeedmultiplier; // Pas de snelheidstoename aan zoals gewenst
+    barSpeed += 0.2; // Pas de snelheidstoename aan zoals gewenst
 }
 
 document.querySelectorAll('button').forEach(button => {
