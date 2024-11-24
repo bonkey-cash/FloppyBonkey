@@ -29,18 +29,21 @@ font-style: normal;
         max-width: 100%;
     }
 
-    canvas {
-        align-items: center;
-        display: block;
-        margin: 0 auto;
-        border: 3px solid black;
-        width: 98%;
-        height: 90vh;
-        background-image: url('Ponke Chart Background.png'); /* Update the URL with your actual background image */
-        background-size: cover;
-        background-position: center;
-        border-radius: 50px;
-    }
+canvas {
+    align-items: center;
+    display: block;
+    margin: 0 auto;
+    border: 3px solid black;
+    width: 98%;
+    height: 90vh;
+    background-image: url('moon surface 2.png'), url('Ponke Chart Background.png'); /* Reverse the order */
+    background-size: contain, cover; /* Moon surface adjusts size, main background fills */
+    background-position: bottom, center; /* Align moon surface to bottom, background centered */
+    background-repeat: no-repeat, no-repeat; /* Prevent repetition for both images */
+    border-radius: 50px;
+}
+
+	
     /* CSS for volume controls */
 
     #startButton, #shopButton, #selectCharacterButton, #clearCacheButton, #highscoreButton, #pauseButton, #muteButton, #tweetScoreButton {
@@ -357,6 +360,10 @@ font-style: normal;
         
         const backgroundImage = new Image();
         backgroundImage.src = 'Ponke Chart Background.png'; 
+		
+		const moonSurfaceImage = new Image();
+		moonSurfaceImage.src = 'moon surface 2.png';
+
 
         const coinImage = new Image();
         coinImage.src = 'coin.png';
@@ -421,6 +428,7 @@ font-style: normal;
         let purchasedCharacters = JSON.parse(localStorage.getItem('purchasedCharacters')) || [];
 
         let backgroundX = 0;
+		let moonSurfaceX = 0;
 
         function resizeCanvas() {
 			canvas.width = canvas.clientWidth; // Keep width dynamic
@@ -458,17 +466,28 @@ font-style: normal;
 		const gameOverSound = new Audio('');
 		const scoreSound = new Audio(''); // Replace with the correct path to your MP3 file
 
+
+
 		function clearCanvas() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear entire canvas
 
 			// Redraw the background
-			backgroundX -= barSpeed * 0.5;
+			backgroundX -= barSpeed * 0.25;
 			if (backgroundX <= -canvas.width) {
 				backgroundX = 0;
 			}
 			ctx.drawImage(backgroundImage, backgroundX, 0, canvas.width, canvas.height);
 			ctx.drawImage(backgroundImage, backgroundX + canvas.width, 0, canvas.width, canvas.height);
+
+			// Add scrolling effect for the moon surface
+			moonSurfaceX -= barSpeed * 0.5; // Move the moon surface to the left
+			if (moonSurfaceX <= -canvas.width) {
+				moonSurfaceX = 0; // Reset position to create a seamless loop
+			}
+			ctx.drawImage(moonSurfaceImage, moonSurfaceX, canvas.height - moonSurfaceImage.height, canvas.width, moonSurfaceImage.height);
+			ctx.drawImage(moonSurfaceImage, moonSurfaceX + canvas.width, canvas.height - moonSurfaceImage.height, canvas.width, moonSurfaceImage.height);
 		}
+
 
 
         
@@ -607,11 +626,11 @@ font-style: normal;
 function detectCollision() {
     const turtleLeft = turtle.x + turtle.width * 0.2; // Left side of the turtle (20% inward)
     const turtleRight = turtle.x + turtle.width * 0.8; // Right side of the turtle (80% inward)
-    const turtleTop = turtle.y + turtle.height * 0.33; // Top side of the turtle (25% inward)
-    const turtleBottom = turtle.y + turtle.height * 0.63; // Bottom side of the turtle (75% inward)
+    const turtleTop = turtle.y + turtle.height * 0.25; // Top side of the turtle (25% inward)
+    const turtleBottom = turtle.y + turtle.height * 0.75; // Bottom side of the turtle (75% inward)
 
     // Check for canvas top or bottom collision
-    if (turtleTop <= 0 || turtleBottom >= canvas.height) {
+    if (turtleTop <= 0 || turtleBottom >= canvas.height - moonSurfaceImage.height) {
         return true; // Collision detected
     }
 
