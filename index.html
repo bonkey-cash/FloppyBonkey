@@ -325,7 +325,12 @@ canvas {
         <div class="character-container" id="characters">
            
        <div class="character-item" data-character="character2">
-    <img src="pixel art bonkey 01.png" alt="Character 2">
+    <img src="pixel art bonkey 01.png" alt="Character 1">
+	<img src="pixel art bonkey 02.png" alt="Character 2">
+	<img src="pixel art bonkey 03.png" alt="Character 3">
+	<img src="pixel art bonkey 04.png" alt="Character 4">
+	<img src="pixel art bonkey 05.png" alt="Character 5">
+	<img src="pixel art bonkey 06.png" alt="Character 6">
     <p>25 Coins</p>
 </div>
      
@@ -765,23 +770,36 @@ function updateScore() {
         }
 
         function keyDown(e) {
-    if (e.key === ' ' || e.code === 'Space') {
-        jump();
-        jumpSound.play(); // Play jump sound effect
-    }
-    
-}
+			if (e.key === ' ' || e.code === 'Space' || e.code === 'ArrowUp' ) {
+				jump();
+				jumpSound.play(); // Play jump sound effect
+			}
+			
+		}
+		
+		// Handle mouse click for jump
+		function mouseDown(event) {
+			const rect = canvas.getBoundingClientRect();
+			const clickX = event.clientX - rect.left;
+			const clickY = event.clientY - rect.top;
 
-function touchStart(event) {
-    const rect = canvas.getBoundingClientRect();
-    const touchX = event.touches[0].clientX - rect.left;
-    const touchY = event.touches[0].clientY - rect.top;
+			// Check if the click is within the canvas bounds
+			if (clickX >= 0 && clickX <= canvas.width && clickY >= 0 && clickY <= canvas.height) {
+				jump();
+				jumpSound.play(); // Play jump sound effect
+			}
+		}
 
-    if (touchX >= 0 && touchX <= canvas.width && touchY >= 0 && touchY <= canvas.height) {
-        jump();
-        jumpSound.play(); // Play jump sound effect
-    }
-}
+		function touchStart(event) {
+			const rect = canvas.getBoundingClientRect();
+			const touchX = event.touches[0].clientX - rect.left;
+			const touchY = event.touches[0].clientY - rect.top;
+
+			if (touchX >= 0 && touchX <= canvas.width && touchY >= 0 && touchY <= canvas.height) {
+				jump();
+				jumpSound.play(); // Play jump sound effect
+			}
+		}
 document.addEventListener('keydown', keyDown);
 canvas.addEventListener('touchstart', touchStart);
 
@@ -1051,6 +1069,7 @@ function buyCharacter(event) {
         document.getElementById('purchasedCharacters').addEventListener('click', selectCharacter);
         document.addEventListener('keydown', keyDown);
         canvas.addEventListener('touchstart', touchStart);
+		canvas.addEventListener('mousedown', mouseDown);
 
 document.addEventListener('DOMContentLoaded', () => {
     totalCoinsCollected = Number(localStorage.getItem('coins')) || 0;
