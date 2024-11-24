@@ -310,8 +310,8 @@ canvas {
 
 <div id="usernameModal" class="modal">
     <div class="modal-content">
-        <p>Please enter your username (max 12 characters):</p>
-        <input type="text" id="usernameInput" maxlength="12">
+        <p>Please enter your username (max 20 characters):</p>
+        <input type="text" id="usernameInput" maxlength="20">
         <button id="saveUsernameButton">Save</button>
         <div id="usernameValidationMessage"></div>
     </div>
@@ -1141,17 +1141,28 @@ canvas.addEventListener('click', (event) => {
         document.getElementById('usernameModal').style.display = 'block';
     }
 });
+
 document.getElementById('saveUsernameButton').addEventListener('click', () => {
     const username = document.getElementById('usernameInput').value.trim();
-    if (username.length > 12) {
-        document.getElementById('usernameValidationMessage').textContent = 'Username must be 12 characters or less.';
-    } else if (username) {
-        localStorage.setItem('username', username);
-        document.getElementById('usernameModal').style.display = 'none';
-    } else {
+    const validUsernameRegex = /^[a-zA-Z0-9\s]+$/; // Allows letters, numbers, and spaces
+
+    if (username.length < 3) {
+        document.getElementById('usernameValidationMessage').textContent = 'Username must be at least 3 characters long.';
+    } else if (username.length > 20) {
+        document.getElementById('usernameValidationMessage').textContent = 'Username must be 20 characters or less.';
+    } else if (!username) {
         document.getElementById('usernameValidationMessage').textContent = 'Please enter a valid username.';
+    } else if (!validUsernameRegex.test(username)) {
+        document.getElementById('usernameValidationMessage').textContent = 'Usernames can only contain letters, numbers, and spaces.';
+    } else {
+        // Sanitize the username for further use
+        const sanitizedUsername = username.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        localStorage.setItem('username', sanitizedUsername);
+        document.getElementById('usernameModal').style.display = 'none';
     }
 });
+
+
 function updateHighscore() {
     const username = localStorage.getItem('username');
     const highscore = Number(localStorage.getItem('highscore')) || 0;
