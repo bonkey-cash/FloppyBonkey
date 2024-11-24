@@ -375,13 +375,13 @@ font-style: normal;
         // Game speed scaler
 		const gamespeedmodifier = 2.5;
 		// Define initial and maximum gravity
-		const initialGravity = 0.06*gamespeedmodifier; // Starting gravity (low)
-		const maxGravity = 0.18*gamespeedmodifier;     // Maximum gravity (normal gameplay value)
+		const initialGravity = 0.045*gamespeedmodifier; // Starting gravity (low)
+		const maxGravity = 0.09*gamespeedmodifier;     // Maximum gravity (normal gameplay value)
 		const gravityIncreaseDuration = 3000; // Time (in ms) to reach max gravity
 
 		// Define initial and adjusted lift
-		const initialLift = -2*(gamespeedmodifier*1); // Stronger jump at low gravity
-		const maxLift = -3*(gamespeedmodifier*1);     // Normal jump at max gravity
+		const initialLift = -1.5*(gamespeedmodifier*1); // Stronger jump at low gravity
+		const maxLift = -3.25*(gamespeedmodifier*1);     // Normal jump at max gravity
 
 		let currentGravity = initialGravity;
 		let currentLift = initialLift;
