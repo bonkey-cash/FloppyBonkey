@@ -326,7 +326,7 @@ canvas {
            
        <div class="character-item" data-character="character2">
     <img src="pixel art bonkey 01.png" alt="Character 1">
-	<img src="pixel art bonkey 02.png" alt="Character 2">
+	<img src="pixel art bonkey 02.jpg" alt="Character 2">
 	<img src="pixel art bonkey 03.png" alt="Character 3">
 	<img src="pixel art bonkey 04.png" alt="Character 4">
 	<img src="pixel art bonkey 05.png" alt="Character 5">
@@ -375,8 +375,8 @@ canvas {
 
         const characters = {
             character1: 'pixel art bonkey 01.png',
-			character2: 'pixel art bonkey 02.png',
-			character3: 'pixel art bonkey 02.png',
+			character2: 'pixel art bonkey 02.jpg',
+			character3: 'pixel art bonkey 03.png',
 			character4: 'pixel art bonkey 04.png',
 			character5: 'pixel art bonkey 05.png',
 			character6: 'pixel art bonkey 06.png',
@@ -387,13 +387,13 @@ canvas {
         // Game speed scaler
 		const gamespeedmodifier = 2.5;
 		// Define initial and maximum gravity
-		const initialGravity = 0.09*gamespeedmodifier; // Starting gravity (low)
-		const maxGravity = 0.18*gamespeedmodifier;     // Maximum gravity (normal gameplay value)
+		const initialGravity = 0.045*gamespeedmodifier; // Starting gravity (low)
+		const maxGravity = 0.09*gamespeedmodifier;     // Maximum gravity (normal gameplay value)
 		const gravityIncreaseDuration = 3000; // Time (in ms) to reach max gravity
 
 		// Define initial and adjusted lift
-		const initialLift = -2.0*(gamespeedmodifier*1); // Stronger jump at low gravity
-		const maxLift = -4.0*(gamespeedmodifier*1);     // Normal jump at max gravity
+		const initialLift = -1.0*(gamespeedmodifier*1); // Stronger jump at low gravity
+		const maxLift = -3.0*(gamespeedmodifier*1);     // Normal jump at max gravity
 
 		let currentGravity = initialGravity;
 		let currentLift = initialLift;
